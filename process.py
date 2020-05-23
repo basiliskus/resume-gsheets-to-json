@@ -1,5 +1,5 @@
 import ast
-import json 
+import json
 import gspread
 from distutils.util import strtobool
 from google.oauth2.service_account import Credentials
@@ -114,8 +114,8 @@ def main():
   gc = gspread.authorize(credentials)
   sh = gc.open(GSHEET_NAME)
 
-  with open(JSON_TEMPLATE) as json_file: 
-    template = json.load(json_file) 
+  with open(JSON_TEMPLATE) as json_file:
+    template = json.load(json_file)
 
   process_main_sheet(sh.worksheet(GSHEET_MAIN_TAB_NAME).get_all_values(), template)
   process_work_sheet(sh.worksheet(GSHEET_WORK_TAB_NAME).get_all_values(), template)
