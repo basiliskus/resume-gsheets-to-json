@@ -17,38 +17,23 @@ keymap = {
     "Languages": ["languages", "{ \"language\": \"{0}\", \"fluency\": \"{1}\" }"]
 }
 
-work_keymap = {
-    "Start Date"
-}
-
-SCOPE1 = 'https://spreadsheets.google.com/feeds'
-SCOPE2 = 'https://www.googleapis.com/auth/drive'
-
-SERVICE_ACCOUNT_JSON = 'credentials.json'
-
 JSON_TEMPLATE = '..\\resume\\resume.empty.json'
 JSON_OUTPUT = '..\\resume\\resume.json'
-
-GSHEET_NAME = 'Resume'
-GSHEET_MAIN_TAB_NAME = 'Main'
-GSHEET_WORK_TAB_NAME = 'Work Experience'
-GSHEET_EDUCATION_TAB_NAME = 'Education'
 
 
 def main():
     credentials = get_credentials()
     gc = gspread.authorize(credentials)
-    sh = gc.open(GSHEET_NAME)
+    sh = gc.open('Resume')
 
     with open(JSON_TEMPLATE) as json_file:
         template = json.load(json_file)
 
-    process_main_sheet(sh.worksheet(
-        GSHEET_MAIN_TAB_NAME).get_all_values(), template)
+    process_main_sheet(sh.worksheet('Main').get_all_values(), template)
     process_work_sheet(sh.worksheet(
-        GSHEET_WORK_TAB_NAME).get_all_values(), template)
+        'Work Experience').get_all_values(), template)
     process_education_sheet(sh.worksheet(
-        GSHEET_EDUCATION_TAB_NAME).get_all_values(), template)
+        'Education').get_all_values(), template)
 
     with open(JSON_OUTPUT, "w", encoding='utf8') as json_file:
         json.dump(template, json_file, indent=2, ensure_ascii=False)
@@ -122,9 +107,12 @@ def process_education_sheet(values, template):
 
 
 def get_credentials():
-    scopes = [SCOPE1, SCOPE2]
+    service_account_json = 'credentials.json'
+    scope1 = 'https://spreadsheets.google.com/feeds'
+    scope2 = 'https://www.googleapis.com/auth/drive'
+    scopes = [scope1, scope2]
     credentials = Credentials.from_service_account_file(
-        SERVICE_ACCOUNT_JSON, scopes=scopes)
+        service_account_json, scopes=scopes)
     return credentials
 
 
