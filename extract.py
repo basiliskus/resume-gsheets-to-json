@@ -4,6 +4,7 @@ import gspread
 from distutils.util import strtobool
 from google.oauth2.service_account import Credentials
 
+
 keymap = {
     "Name": ["basics.name", "{0}"],
     "Title": ["basics.label", "{0}"],
@@ -34,17 +35,26 @@ GSHEET_WORK_TAB_NAME = 'Work Experience'
 GSHEET_EDUCATION_TAB_NAME = 'Education'
 
 
-def get_credentials():
-    scopes = [SCOPE1, SCOPE2]
-    credentials = Credentials.from_service_account_file(
-        SERVICE_ACCOUNT_JSON, scopes=scopes)
-    return credentials
+def main():
+    credentials = get_credentials()
+    gc = gspread.authorize(credentials)
+    sh = gc.open(GSHEET_NAME)
+
+    with open(JSON_TEMPLATE) as json_file:
+        template = json.load(json_file)
+
+    process_main_sheet(sh.worksheet(
+        GSHEET_MAIN_TAB_NAME).get_all_values(), template)
+    process_work_sheet(sh.worksheet(
+        GSHEET_WORK_TAB_NAME).get_all_values(), template)
+    process_education_sheet(sh.worksheet(
+        GSHEET_EDUCATION_TAB_NAME).get_all_values(), template)
+
+    with open(JSON_OUTPUT, "w", encoding='utf8') as json_file:
+        json.dump(template, json_file, indent=2, ensure_ascii=False)
 
 
 def process_main_sheet(values, template):
-    #l = {d[0]: list(filter(None, d[1:])) for d in values}
-    #l = { d[0]: (d[1] if len(list(filter(None, d[1:]))) < 3 else d[1:]) for d in values }
-
     for row in values:
         path = keymap[row[0]][0].split(".")
         content = keymap[row[0]][1]
@@ -111,23 +121,11 @@ def process_education_sheet(values, template):
         template["education"].append(education_json)
 
 
-def main():
-    credentials = get_credentials()
-    gc = gspread.authorize(credentials)
-    sh = gc.open(GSHEET_NAME)
-
-    with open(JSON_TEMPLATE) as json_file:
-        template = json.load(json_file)
-
-    process_main_sheet(sh.worksheet(
-        GSHEET_MAIN_TAB_NAME).get_all_values(), template)
-    process_work_sheet(sh.worksheet(
-        GSHEET_WORK_TAB_NAME).get_all_values(), template)
-    process_education_sheet(sh.worksheet(
-        GSHEET_EDUCATION_TAB_NAME).get_all_values(), template)
-
-    with open(JSON_OUTPUT, "w", encoding='utf8') as json_file:
-        json.dump(template, json_file, indent=2, ensure_ascii=False)
+def get_credentials():
+    scopes = [SCOPE1, SCOPE2]
+    credentials = Credentials.from_service_account_file(
+        SERVICE_ACCOUNT_JSON, scopes=scopes)
+    return credentials
 
 
 if __name__ == "__main__":
