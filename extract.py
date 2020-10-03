@@ -11,8 +11,9 @@ keymap = {
     "Location": ["basics.location", "{ \"address\": \"\", \"postalCode\": \"\", \"city\": \"{0}\", \"countryCode\": \"\", \"region\": \"\" }"],
     "Phone": ["basics.phone", "{0}"],
     "Email": ["basics.email", "{0}"],
+    "Website": ["basics.website", "{0}"],
     "Summary": ["basics.summary", "{0}"],
-    "Social Media": ["basics.profiles", "{ \"network\": \"{0}\", \"username\": \"{1}\", \"url\": \"\" }"],
+    "Social Media": ["basics.profiles", "{ \"network\": \"{0}\", \"username\": \"{1}\", \"url\": \"{2}\" }"],
     "Skills": ["skills", "{ \"name\": \"{0}\", \"level\": \"\", \"keywords\": [\"{1}\"] }"],
     "Languages": ["languages", "{ \"language\": \"{0}\", \"fluency\": \"{1}\" }"]
 }
