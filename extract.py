@@ -82,9 +82,9 @@ def process_work_sheet(values, template):
         work_json["website"] = ""
         work_json["startDate"] = row[0]
         work_json["endDate"] = row[1]
-        work_json["location"] = row[6]
+        work_json["location"] = row[4]
         work_json["summary"] = ""
-        work_json["highlights"] = row[7].splitlines()
+        work_json["highlights"] = row[5].splitlines()
         work_json["starred"] = bool(strtobool(row[8]))
 
         template["work"].append(work_json)
