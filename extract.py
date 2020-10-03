@@ -1,3 +1,4 @@
+import re
 import ast
 import json
 import gspread
@@ -42,14 +43,15 @@ def main():
 
 def process_main_sheet(values, template):
     for row in values:
-        path = keymap[row[0]][0].split(".")
-        content = keymap[row[0]][1]
+        row = list(filter(None, row))   # cleanup empty strings in list
+        label = row[0]
+        path = keymap[label][0].split(".")
+        content = keymap[label][1]
 
-        if (len(row) > 2 and row[2]):
-            content = content.replace("{0}", row[1])
-            content = content.replace("{1}", row[2])
-        else:
-            content = content.replace("{0}", row[1])
+        for idx in range(1, len(row)):
+            content = content.replace(f"{{{idx-1}}}", row[idx])
+
+        content = re.sub(r'\{\d\}', '', content)      # remove {}'s
 
         try:
             content = json.loads(content)
