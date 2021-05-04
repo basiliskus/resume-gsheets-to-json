@@ -77,15 +77,15 @@ def process_work_sheet(values, template):
     for row in values:
         #work_json = { "company": "", "position": "", "website": "", "startDate": "", "endDate": "", "summary": "", "highlights": [], "starred": None }
         work_json = {}
-        work_json["company"] = row[3]
+        work_json["company"] = row[4]
         work_json["position"] = row[2]
         work_json["website"] = ""
         work_json["startDate"] = row[0]
         work_json["endDate"] = row[1]
-        work_json["location"] = row[4]
+        work_json["location"] = row[5]
         work_json["summary"] = ""
-        work_json["highlights"] = row[5].splitlines()
-        work_json["starred"] = bool(strtobool(row[8]))
+        work_json["highlights"] = row[6].splitlines()
+        work_json["starred"] = bool(strtobool(row[10]))
 
         template["work"].append(work_json)
 
